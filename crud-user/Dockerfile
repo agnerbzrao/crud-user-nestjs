@@ -4,4 +4,6 @@ COPY package.json ./
 COPY package-lock.json ./
 COPY ./ ./
 RUN npm i
-CMD npm run start 
+RUN npm i -g @nestjs/cli
+
+CMD npm run start:dev 
