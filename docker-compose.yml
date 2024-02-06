@@ -40,6 +40,9 @@ services:
       - /app/node_modules
     networks:
       - default  
+    command: >
+      sh -c "cp -rfu /cache/node_modules/. /app/node_modules/  
+      && npm run start:dev"  
             
 volumes: 
   mysql-volume:      
