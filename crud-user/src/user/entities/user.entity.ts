@@ -18,7 +18,7 @@ export class User {
   userAge: number;
 
   @Column()
-  profileImage: string;
+  userImage: string;
 
   @CreateDateColumn()
   createdAt: Date;

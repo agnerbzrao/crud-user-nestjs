@@ -7,9 +7,9 @@ services:
     restart: unless-stopped
     env_file: ./.env
     environment:
-      MYSQL_ROOT_PASSWORD: $MYSQLDB_PASSWORD
+      MYSQL_ROOT_PASSWORD: $DATABSE_PASSWORD
     ports:
-      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+      - $DATABSE_LOCAL_PORT:$DATABSE_DOCKER_PORT
     volumes:
       - mysql-volume:/var/lib/mysql:rw
       - ./mysql-db:/docker-entrypoint-initdb.d/
@@ -28,11 +28,11 @@ services:
     ports:
       - $NESTJS_PROJECT_LOCAL_PORT:$NESTJS_PROJECT_DOCKER_PORT
     environment:
-      - DB_HOST=$MYSQLDB_HOST
-      - DB_USER=$MYSQLDB_USER
-      - DB_PASSWORD=$MYSQLDB_PASSWORD
-      - DB_DATABASE=$MYSQLDB_DATABASE
-      - DB_PORT=$MYSQLDB_DOCKER_PORT
+      - DB_HOST=$DATABSE_HOST
+      - DB_USER=$DATABSE_USER
+      - DB_PASSWORD=$DATABSE_PASSWORD
+      - DB_DATABASE=$DATABSE_DATABASE
+      - DB_PORT=$DATABSE_DOCKER_PORT
     stdin_open: true
     tty: true
     volumes:
