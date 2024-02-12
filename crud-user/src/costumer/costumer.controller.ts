@@ -10,9 +10,9 @@ import {
   UploadedFile,
   Res,
 } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CostumerService } from './costumer.service';
+import { CreateCostumerDto } from './dto/create-costumer.dto';
+import { UpdateCostumerDto } from './dto/update-costumer.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Response } from 'express';
@@ -29,8 +29,8 @@ const storage = diskStorage({
 });
 
 @Controller('profile')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class CostumerController {
+  constructor(private readonly costumerService: CostumerService) {}
 
   @Post()
   @UseInterceptors(
@@ -40,19 +40,19 @@ export class UserController {
   )
   create(
     @UploadedFile() file: Express.Multer.File,
-    @Body() createUserDto: CreateUserDto,
+    @Body() createCostumerDto: CreateCostumerDto,
   ) {
-    return this.userService.create(file, createUserDto);
+    return this.costumerService.create(file, createCostumerDto);
   }
 
   @Get()
   findAll(@Res() res: Response) {
-    return this.userService.findAll(res);
+    return this.costumerService.findAll(res);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @Res() res: Response) {
-    return this.userService.findOne(+id, res);
+    return this.costumerService.findOne(+id, res);
   }
 
   @Patch(':id')
@@ -64,14 +64,14 @@ export class UserController {
   update(
     @UploadedFile() file: Express.Multer.File,
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() updateCostumerDto: UpdateCostumerDto,
     @Res() res: Response,
   ) {
-    return this.userService.update(file, +id, updateUserDto, res);
+    return this.costumerService.update(file, +id, updateCostumerDto, res);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @Res() res: Response) {
-    return this.userService.delete(+id, res);
+    return this.costumerService.delete(+id, res);
   }
 }

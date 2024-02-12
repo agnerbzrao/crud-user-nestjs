@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+import { CostumerModule } from './costumer/costumer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-// import { User } from './user/entities/user.entity';
 import typeOrmConfig from './config/typeorm';
 
 @Module({
@@ -18,7 +17,7 @@ import typeOrmConfig from './config/typeorm';
       useFactory: async (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
-    UserModule,
+    CostumerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

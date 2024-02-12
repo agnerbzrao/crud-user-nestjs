@@ -7,18 +7,18 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class User {
+export class Costumer {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  userName: string;
+  costumerName: string;
 
   @Column('int')
-  userAge: number;
+  costumerAge: number;
 
   @Column()
-  userImage: string;
+  costumerImage: string;
 
   @CreateDateColumn()
   createdAt: Date;

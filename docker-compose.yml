@@ -28,6 +28,7 @@ services:
     ports:
       - $NESTJS_PROJECT_LOCAL_PORT:$NESTJS_PROJECT_DOCKER_PORT
     environment:
+      - DB_TYPE=$DATABSE_TYPE
       - DB_HOST=$DATABSE_HOST
       - DB_USER=$DATABSE_USER
       - DB_PASSWORD=$DATABSE_PASSWORD
@@ -39,10 +40,7 @@ services:
       - ./crud-user:/app
       - /app/node_modules
     networks:
-      - default  
-    command: >
-      sh -c "cp -rfu /cache/node_modules/. /app/node_modules/  
-      && npm run start:dev"  
+      - default   
             
 volumes: 
   mysql-db:      
