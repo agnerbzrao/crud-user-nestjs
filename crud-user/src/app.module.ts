@@ -3,19 +3,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/entities/user.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+// import { User } from './user/entities/user.entity';
+import typeOrmConfig from './config/typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DATABSE_HOST,
-      port: process.env.DATABSE_DOCKER_PORT as any,
-      username: process.env.DATABSE_USER,
-      password: process.env.DATABSE_PASSWORD,
-      database: process.env.DATABSE_DATABASE,
-      entities: [User],
-      synchronize: true, // Set to false in production
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [typeOrmConfig],
+    }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) =>
+        configService.get('typeorm'),
     }),
     UserModule,
   ],

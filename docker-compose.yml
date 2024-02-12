@@ -11,8 +11,8 @@ services:
     ports:
       - $DATABSE_LOCAL_PORT:$DATABSE_DOCKER_PORT
     volumes:
-      - mysql-volume:/var/lib/mysql:rw
-      - ./mysql-db:/docker-entrypoint-initdb.d/
+      - mysql-db:/var/lib/mysql
+      - ./mysql-db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - default  
 
@@ -45,4 +45,4 @@ services:
       && npm run start:dev"  
             
 volumes: 
-  mysql-volume:      
+  mysql-db:      
