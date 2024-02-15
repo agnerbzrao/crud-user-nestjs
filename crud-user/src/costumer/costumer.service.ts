@@ -17,7 +17,7 @@ export class CostumerService {
   async findAll(res: Response) {
     const costumer = await this.costumerRepository.find();
     if (costumer.length !== 0) {
-      return res.status(200).json(Costumer);
+      return res.status(200).json(costumer);
     }
     return res.status(404).json({ msg: 'Costumer not found.' });
   }
@@ -32,6 +32,7 @@ export class CostumerService {
 
   create(file: Express.Multer.File, createCostumerDto: CreateCostumerDto) {
     const { costumerName, costumerAge } = createCostumerDto;
+    console.log(file);
 
     const costumer = this.costumerRepository.create({
       costumerName: costumerName,
