@@ -30,19 +30,15 @@ export class CostumerService {
     return res.status(404).json({ msg: 'Costumer not found.' });
   }
 
-  // Create a new Costumer profile with uploaded image and Costumer data
   create(file: Express.Multer.File, createCostumerDto: CreateCostumerDto) {
-    // Extract CostumerName and CostumerAge from the DTO
     const { costumerName, costumerAge } = createCostumerDto;
 
-    // Create a new Costumer object with Costumer data and, if provided, the uploaded file's filename
     const costumer = this.costumerRepository.create({
       costumerName: costumerName,
       costumerAge: costumerAge,
       costumerImage: file?.filename,
     });
 
-    // Save the newly created Costumer to the database and return the saved Costumer
     return this.costumerRepository.save(costumer);
   }
 
@@ -56,7 +52,9 @@ export class CostumerService {
     const costumer = await this.costumerRepository.findOneBy({ id });
     if (costumer) {
       if (file) {
-        await fs.unlink(path.join(process.cwd(), `./images/${costumer.costumerImage}`));
+        await fs.unlink(
+          path.join(process.cwd(), `./images/${costumer.costumerImage}`),
+        );
         await this.costumerRepository.update(
           {
             id: id,
@@ -87,7 +85,9 @@ export class CostumerService {
   async delete(id: number, res: Response) {
     const costumer = await this.costumerRepository.findOneBy({ id });
     if (costumer) {
-      await fs.unlink(path.join(process.cwd(), `./images/${costumer.costumerImage}`));
+      await fs.unlink(
+        path.join(process.cwd(), `./images/${costumer.costumerImage}`),
+      );
       await this.costumerRepository.delete(id);
       return res.status(200).json({ msg: 'Costumer deleted successfully.' });
     }
