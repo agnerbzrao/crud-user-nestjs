@@ -38,8 +38,9 @@ export class CostumerService {
       costumerAge: costumerAge,
       costumerImage: file?.filename,
     });
+    console.log(costumer);
 
-    return this.costumerRepository.save(costumer);
+    // return this.costumerRepository.save(costumer);
   }
 
   async update(
@@ -84,9 +85,11 @@ export class CostumerService {
 
   async delete(id: number, res: Response) {
     const costumer = await this.costumerRepository.findOneBy({ id });
+    console.log(costumer);
+
     if (costumer) {
       await fs.unlink(
-        path.join(process.cwd(), `./images/${costumer.costumerImage}`),
+        path.join(process.cwd(), `./src/images/${costumer.costumerImage}`),
       );
       await this.costumerRepository.delete(id);
       return res.status(200).json({ msg: 'Costumer deleted successfully.' });

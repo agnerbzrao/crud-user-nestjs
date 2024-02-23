@@ -35,13 +35,15 @@ export class CostumerController {
   @Post()
   @UseInterceptors(
     FileInterceptor('costumerImage', {
-      storage: storage,
+      storage,
     }),
   )
   create(
     @UploadedFile() file: Express.Multer.File,
     @Body() createCostumerDto: CreateCostumerDto,
   ) {
+    console.log(file);
+
     return this.costumerService.create(file, createCostumerDto);
   }
 
@@ -57,7 +59,7 @@ export class CostumerController {
 
   @Patch(':id')
   @UseInterceptors(
-    FileInterceptor('image', {
+    FileInterceptor('costumerImage', {
       storage: storage,
     }),
   )
