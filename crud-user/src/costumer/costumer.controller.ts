@@ -19,7 +19,7 @@ import { Response } from 'express';
 
 const storage = diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './images');
+    cb(null, './src/images');
   },
   filename: (req, file, cb) => {
     const fileExt = file?.mimetype?.split('/')[1];
@@ -34,7 +34,7 @@ export class CostumerController {
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('Image', {
+    FileInterceptor('costumerImage', {
       storage: storage,
     }),
   )

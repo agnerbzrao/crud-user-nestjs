@@ -32,7 +32,6 @@ export class CostumerService {
 
   create(file: Express.Multer.File, createCostumerDto: CreateCostumerDto) {
     const { costumerName, costumerAge } = createCostumerDto;
-    console.log(file);
 
     const costumer = this.costumerRepository.create({
       costumerName: costumerName,
