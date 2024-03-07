@@ -14,32 +14,18 @@ import { CostumerService } from './costumer.service';
 import { CreateCostumerDto } from './dto/create-costumer.dto';
 import { UpdateCostumerDto } from './dto/update-costumer.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 import { Response } from 'express';
-
-const storage = diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './src/images');
-  },
-  filename: (req, file, cb) => {
-    const fileExt = file?.mimetype?.split('/')[1];
-    const fileGen = `${Date.now()}.${fileExt}`;
-    cb(null, fileGen);
-  },
-});
+import { getFileValidator } from './dto/parse-file-pipe-document';
+import multerConfig from '../files/multer-config';
 
 @Controller('costumer')
 export class CostumerController {
   constructor(private readonly costumerService: CostumerService) {}
 
   @Post()
-  @UseInterceptors(
-    FileInterceptor('costumerImage', {
-      storage,
-    }),
-  )
+  @UseInterceptors(FileInterceptor('costumerImage', multerConfig))
   create(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(getFileValidator()) file: Express.Multer.File,
     @Body() createCostumerDto: CreateCostumerDto,
   ) {
     console.log(file);
@@ -58,11 +44,7 @@ export class CostumerController {
   }
 
   @Patch(':id')
-  @UseInterceptors(
-    FileInterceptor('costumerImage', {
-      storage: storage,
-    }),
-  )
+  @UseInterceptors(FileInterceptor('costumerImage', multerConfig))
   update(
     @UploadedFile() file: Express.Multer.File,
     @Param('id') id: string,

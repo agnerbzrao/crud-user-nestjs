@@ -1,8 +1,8 @@
-import { IsFile } from './file-costumer-validation';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateCostumerDto } from './create-costumer.dto';
 
-export class UpdateCostumerDto {
+export class UpdateCostumerDto extends PartialType(CreateCostumerDto) {
   costumerName: string;
   costumerAge: number;
-  @IsFile({ mime: ['image/jpg', 'image/png'] })
   costumerImage: string;
 }

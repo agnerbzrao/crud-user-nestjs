@@ -38,9 +38,8 @@ export class CostumerService {
       costumerAge: costumerAge,
       costumerImage: file?.filename,
     });
-    console.log(costumer);
 
-    // return this.costumerRepository.save(costumer);
+    return this.costumerRepository.save(costumer);
   }
 
   async update(
@@ -68,17 +67,6 @@ export class CostumerService {
         );
         return res.status(200).json({ msg: 'Costumer updated successfully.' });
       }
-
-      await this.costumerRepository.update(
-        {
-          id: id,
-        },
-        {
-          costumerName: costumerName,
-          costumerAge: costumerAge,
-        },
-      );
-      return res.status(200).json({ msg: 'Costumer updated successfully.' });
     }
     return res.status(404).json({ msg: 'Costumer not found.' });
   }

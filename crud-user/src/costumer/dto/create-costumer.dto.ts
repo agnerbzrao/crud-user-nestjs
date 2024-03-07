@@ -1,5 +1,4 @@
 import { IsNotEmpty, MinLength, MaxLength, IsString } from 'class-validator';
-import { IsFile } from './file-costumer-validation';
 export class CreateCostumerDto {
   @IsString()
   @IsNotEmpty({
@@ -17,7 +16,4 @@ export class CreateCostumerDto {
     message: 'The field costumerAge is required',
   })
   costumerAge: number;
-
-  @IsFile({ mime: ['image/jpg', 'image/png'] })
-  costumerImage: File;
 }
