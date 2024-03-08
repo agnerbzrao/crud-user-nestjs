@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
   UseInterceptors,
@@ -15,23 +15,12 @@ import { CreateCostumerDto } from './dto/create-costumer.dto';
 import { UpdateCostumerDto } from './dto/update-costumer.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
-import { getFileValidator } from './dto/parse-file-pipe-document';
 import multerConfig from '../files/multer-config';
+import { getFileValidator } from './dto/parse-file-pipe-document';
 
 @Controller('costumer')
 export class CostumerController {
   constructor(private readonly costumerService: CostumerService) {}
-
-  @Post()
-  @UseInterceptors(FileInterceptor('costumerImage', multerConfig))
-  create(
-    @UploadedFile(getFileValidator()) file: Express.Multer.File,
-    @Body() createCostumerDto: CreateCostumerDto,
-  ) {
-    console.log(file);
-
-    return this.costumerService.create(file, createCostumerDto);
-  }
 
   @Get()
   findAll(@Res() res: Response) {
@@ -43,7 +32,16 @@ export class CostumerController {
     return this.costumerService.findOne(+id, res);
   }
 
-  @Patch(':id')
+  @Post()
+  @UseInterceptors(FileInterceptor('costumerImage', multerConfig))
+  create(
+    @UploadedFile(getFileValidator()) file: Express.Multer.File,
+    @Body() createCostumerDto: CreateCostumerDto,
+  ) {
+    return this.costumerService.create(file, createCostumerDto);
+  }
+
+  @Put(':id')
   @UseInterceptors(FileInterceptor('costumerImage', multerConfig))
   update(
     @UploadedFile() file: Express.Multer.File,

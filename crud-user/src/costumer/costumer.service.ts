@@ -48,32 +48,26 @@ export class CostumerService {
     updateCostumerDto: UpdateCostumerDto,
     res: Response,
   ) {
-    const { costumerName, costumerAge } = updateCostumerDto;
     const costumer = await this.costumerRepository.findOneBy({ id });
-    if (costumer) {
-      if (file) {
-        await fs.unlink(
-          path.join(process.cwd(), `./images/${costumer.costumerImage}`),
-        );
-        await this.costumerRepository.update(
-          {
-            id: id,
-          },
-          {
-            costumerName: costumerName,
-            costumerAge: costumerAge,
-            costumerImage: file?.filename,
-          },
-        );
-        return res.status(200).json({ msg: 'Costumer updated successfully.' });
-      }
+    if (!costumer) {
+      await this.deleteFile(file?.filename, file);
+      return res.status(404).json({ msg: 'Costumer not found.' });
     }
-    return res.status(404).json({ msg: 'Costumer not found.' });
+
+    updateCostumerDto.costumerImage = file?.filename;
+    await this.costumerRepository.update({ id }, updateCostumerDto);
+    await this.deleteFile(costumer.costumerImage, file);
+
+    return res.status(200).json({ msg: 'Costumer updated successfully.' });
   }
 
+  async deleteFile(pathFile: string, file: Express.Multer.File): Promise<void> {
+    if (file) {
+      await fs.unlink(path.join(process.cwd(), `./src/images/${pathFile}`));
+    }
+  }
   async delete(id: number, res: Response) {
     const costumer = await this.costumerRepository.findOneBy({ id });
-    console.log(costumer);
 
     if (costumer) {
       await fs.unlink(

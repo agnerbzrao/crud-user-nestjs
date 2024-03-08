@@ -15,5 +15,8 @@ export class CreateCostumerDto {
   @IsNotEmpty({
     message: 'The field costumerAge is required',
   })
+  @MaxLength(2, {
+    message: 'The field costumerAge is too long',
+  })
   costumerAge: number;
 }
