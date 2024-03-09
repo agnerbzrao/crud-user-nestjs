@@ -14,8 +14,8 @@ export class Costumer {
   @Column({ name: 'costumer_name' })
   costumerName: string;
 
-  @Column({ name: 'costumer_age' })
-  costumerAge: number;
+  @Column({ name: 'costumer_email' })
+  costumerEmail: string;
 
   @Column({ name: 'costumer_image' })
   costumerImage: string;

@@ -19,8 +19,8 @@ export class CreateCostumerTable1707869761430 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'costumer_age',
-            type: 'int',
+            name: 'costumer_email',
+            type: 'varchar',
             isNullable: false,
           },
           {

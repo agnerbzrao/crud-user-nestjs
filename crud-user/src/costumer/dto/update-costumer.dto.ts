@@ -12,10 +12,13 @@ export class UpdateCostumerDto extends PartialType(CreateCostumerDto) {
   })
   costumerName: string;
 
-  @MaxLength(2, {
-    message: 'The field costumerAge is too long',
+  @MinLength(10, {
+    message: 'The field costumerEmail is too short',
   })
-  costumerAge: number;
+  @MaxLength(100, {
+    message: 'The field costumerEmail is too long',
+  })
+  costumerEmail: string;
 
   costumerImage: string;
 }
