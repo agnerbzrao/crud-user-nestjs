@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
+  UseFilters,
 } from '@nestjs/common';
 import { CostumerService } from './costumer.service';
 import { CreateCostumerDto } from './dto/create-costumer.dto';
@@ -17,7 +18,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import multerConfig from '../files/multer-config';
 import { getFileValidator } from './dto/parse-file-pipe-document';
+import { DeleteFileOnErrorFilter } from './dto/delete-file-on-error-filter';
 
+@UseFilters(DeleteFileOnErrorFilter)
 @Controller('costumer')
 export class CostumerController {
   constructor(private readonly costumerService: CostumerService) {}

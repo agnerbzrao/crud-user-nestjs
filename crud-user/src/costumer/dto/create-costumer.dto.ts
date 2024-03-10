@@ -1,4 +1,10 @@
-import { IsNotEmpty, MinLength, MaxLength, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  MinLength,
+  MaxLength,
+  IsString,
+  Matches,
+} from 'class-validator';
 export class CreateCostumerDto {
   @IsString()
   @IsNotEmpty({
@@ -20,6 +26,9 @@ export class CreateCostumerDto {
   })
   @MaxLength(100, {
     message: 'The field costumerEmail is too long',
+  })
+  @Matches(/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/, {
+    message: 'The e-mail must have @ and .com',
   })
   costumerEmail: string;
 }
