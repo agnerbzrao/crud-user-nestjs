@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Costumer } from './entities/costumer.entity';
 import { Repository } from 'typeorm';
 import { Response } from 'express';
+import { IsNull, Not } from 'typeorm';
+
 import * as fs from 'fs/promises';
 import * as path from 'path';
 @Injectable()
@@ -16,6 +18,19 @@ export class CostumerService {
 
   async findAll(res: Response) {
     const costumer = await this.costumerRepository.find();
+    if (costumer.length !== 0) {
+      return res.status(200).json(costumer);
+    }
+    return res.status(404).json({ msg: 'Costumer not found.' });
+  }
+
+  async findForAllCostumersEvenDeleted(res: Response) {
+    const costumer = await this.costumerRepository.find({
+      where: {
+        deletedAt: Not(IsNull()),
+      },
+      withDeleted: true,
+    });
     if (costumer.length !== 0) {
       return res.status(200).json(costumer);
     }
@@ -71,10 +86,7 @@ export class CostumerService {
     const costumer = await this.costumerRepository.findOneBy({ id });
 
     if (costumer) {
-      await fs.unlink(
-        path.join(process.cwd(), `./src/images/${costumer.costumerImage}`),
-      );
-      await this.costumerRepository.delete(id);
+      await this.costumerRepository.softDelete(id);
       return res.status(200).json({ msg: 'Costumer deleted successfully.' });
     }
     return res.status(404).json({ msg: 'Costumer not found.' });
