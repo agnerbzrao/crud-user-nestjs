@@ -31,12 +31,13 @@ export class CostumerService {
   }
 
   create(file: Express.Multer.File, createCostumerDto: CreateCostumerDto) {
-    const { costumerName, costumerEmail } = createCostumerDto;
+    const { costumerName, costumerEmail, status } = createCostumerDto;
 
     const costumer = this.costumerRepository.create({
       costumerName: costumerName,
       costumerEmail: costumerEmail,
       costumerImage: file?.filename,
+      status: status,
     });
 
     return this.costumerRepository.save(costumer);

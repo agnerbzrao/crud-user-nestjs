@@ -4,7 +4,10 @@ import {
   MaxLength,
   IsString,
   Matches,
+  IsEnum,
+  NotEquals,
 } from 'class-validator';
+import { Status } from '../enum/status.enum';
 export class CreateCostumerDto {
   @IsString()
   @IsNotEmpty({
@@ -31,4 +34,10 @@ export class CreateCostumerDto {
     message: 'The e-mail must have @ and .com',
   })
   costumerEmail: string;
+
+  @IsEnum(Status, {
+    message: 'The field status is required',
+  })
+  @NotEquals(Status)
+  status: Status;
 }

@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-
+import { Status } from 'src/costumer/enum/status.enum';
 export class CreateCostumerTable1707869761430 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
@@ -30,6 +30,14 @@ export class CreateCostumerTable1707869761430 implements MigrationInterface {
             default: false,
           },
           {
+            name: 'status',
+            type: 'enum',
+            enum: [Status.ACTIVE, Status.INACTIVE],
+            enumName: 'statusEnum',
+            isNullable: false,
+            default: `"${Status.INACTIVE}"`,
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             isNullable: false,
@@ -37,6 +45,12 @@ export class CreateCostumerTable1707869761430 implements MigrationInterface {
           },
           {
             name: 'updated_at',
+            type: 'timestamp',
+            isNullable: true,
+            default: false,
+          },
+          {
+            name: 'deleted_at',
             type: 'timestamp',
             isNullable: true,
             default: false,
