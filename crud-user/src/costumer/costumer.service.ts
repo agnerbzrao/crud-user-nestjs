@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCostumerDto } from './dto/create-costumer.dto';
 import { UpdateCostumerDto } from './dto/update-costumer.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,7 +21,9 @@ export class CostumerService {
     if (costumer.length !== 0) {
       return res.status(200).json(costumer);
     }
-    return res.status(404).json({ msg: 'Costumer not found.' });
+    throw new NotFoundException({
+      message: `Anyone costumer was found`,
+    });
   }
 
   async findForAllCostumersEvenDeleted(res: Response) {
@@ -34,7 +36,9 @@ export class CostumerService {
     if (costumer.length !== 0) {
       return res.status(200).json(costumer);
     }
-    return res.status(404).json({ msg: 'Costumer not found.' });
+    throw new NotFoundException({
+      message: `Anyone costumer was found even deleted`,
+    });
   }
 
   async findOne(id: number, res: Response) {
@@ -42,7 +46,9 @@ export class CostumerService {
     if (costumer) {
       return res.status(200).json(costumer);
     }
-    return res.status(404).json({ msg: 'Costumer not found.' });
+    throw new NotFoundException({
+      message: `Costumer with id ${id} not found`,
+    });
   }
 
   create(file: Express.Multer.File, createCostumerDto: CreateCostumerDto) {
@@ -67,7 +73,9 @@ export class CostumerService {
     const costumer = await this.costumerRepository.findOneBy({ id });
     if (!costumer) {
       await this.deleteFile(file?.filename, file);
-      return res.status(404).json({ msg: 'Costumer not found.' });
+      throw new NotFoundException({
+        message: `Costumer with id ${id} not found`,
+      });
     }
 
     updateCostumerDto.costumerImage = file?.filename;
@@ -89,6 +97,8 @@ export class CostumerService {
       await this.costumerRepository.softDelete(id);
       return res.status(200).json({ msg: 'Costumer deleted successfully.' });
     }
-    return res.status(404).json({ msg: 'Costumer not found.' });
+    throw new NotFoundException({
+      message: `Costumer with id ${id} not found`,
+    });
   }
 }
