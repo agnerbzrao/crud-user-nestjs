@@ -21,7 +21,7 @@ import { getFileValidator } from './dto/parse-file-pipe-document';
 import { HttpExceptionFilter } from './dto/delete-file-on-error-filter';
 
 @UseFilters(HttpExceptionFilter)
-@Controller('costumer')
+@Controller('customer')
 export class CostumerController {
   constructor(private readonly costumerService: CostumerService) {}
 
@@ -33,6 +33,11 @@ export class CostumerController {
   @Get(':id')
   findOne(@Param('id') id: string, @Res() res: Response) {
     return this.costumerService.findOne(+id, res);
+  }
+
+  @Get('costumer-image-buffer/:id')
+  getCostumerImageBuffer(@Param('id') id: string, @Res() res: Response) {
+    return this.costumerService.getCostumerImageBuffer(+id, res);
   }
 
   @Post()

@@ -11,6 +11,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 @Injectable()
 export class CostumerService {
+  private beginOfPathFile: string = './src/images/';
   constructor(
     @InjectRepository(Costumer)
     private costumerRepository: Repository<Costumer>,
@@ -45,6 +46,18 @@ export class CostumerService {
     const costumer = await this.costumerRepository.findOneBy({ id });
     if (costumer) {
       return res.status(200).json(costumer);
+    }
+    throw new NotFoundException({
+      message: `Costumer with id ${id} not found`,
+    });
+  }
+  async getCostumerImageBuffer(id: number, res: Response) {
+    const costumer = await this.costumerRepository.findOneBy({ id });
+    if (costumer) {
+      const teste = await fs.readFile(
+        this.beginOfPathFile + costumer?.costumerImage,
+      );
+      return res.status(200).json(teste);
     }
     throw new NotFoundException({
       message: `Costumer with id ${id} not found`,
@@ -87,7 +100,9 @@ export class CostumerService {
 
   async deleteFile(pathFile: string, file: Express.Multer.File): Promise<void> {
     if (file) {
-      await fs.unlink(path.join(process.cwd(), `./src/images/${pathFile}`));
+      await fs.unlink(
+        path.join(process.cwd(), this.beginOfPathFile + pathFile),
+      );
     }
   }
   async delete(id: number, res: Response) {
