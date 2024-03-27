@@ -8,6 +8,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
   const httpAdapter: HttpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-  await app.listen(process.env.NESTJS_PROJECT_LOCAL_PORT);
+  await app.listen(process.env.NESTJS_PROJECT_DOCKER_PORT);
 }
 bootstrap();
