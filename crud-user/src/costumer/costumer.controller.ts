@@ -30,7 +30,7 @@ export class CostumerController {
     return this.costumerService.findAll(res);
   }
 
-  @Get('/all-costumers')
+  @Get('/all-customers')
   findForAllCostumersEvenDeleted(@Res() res: Response) {
     return this.costumerService.findForAllCostumersEvenDeleted(res);
   }
