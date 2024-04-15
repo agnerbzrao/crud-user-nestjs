@@ -1,6 +1,6 @@
 import * as request from 'supertest';
 
-const baseURL = 'http://localhost:4000';
+const baseURL = process.env.API_URL;
 
 describe('SuperheroController (e2e)', () => {
   const apiRequest = request(baseURL);
