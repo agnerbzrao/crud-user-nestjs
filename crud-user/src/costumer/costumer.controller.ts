@@ -30,6 +30,11 @@ export class CostumerController {
     return this.costumerService.findAll(res);
   }
 
+  @Get('/all-costumers')
+  findForAllCostumersEvenDeleted(@Res() res: Response) {
+    return this.costumerService.findForAllCostumersEvenDeleted(res);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @Res() res: Response) {
     return this.costumerService.findOne(+id, res);

@@ -60,7 +60,7 @@ export class CostumerService {
       return res.status(200).json(teste);
     }
     throw new NotFoundException({
-      message: `Costumer with id ${id} not found`,
+      message: `Costumer image with id ${id} not found`,
     });
   }
 
