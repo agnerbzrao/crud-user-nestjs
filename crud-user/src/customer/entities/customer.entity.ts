@@ -9,18 +9,18 @@ import {
 import { Status } from '../enum/status.enum';
 
 @Entity()
-export class Costumer {
+export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'costumer_name' })
-  costumerName: string;
+  @Column({ name: 'customer_name' })
+  customerName: string;
 
-  @Column({ name: 'costumer_email' })
-  costumerEmail: string;
+  @Column({ name: 'customer_email' })
+  customerEmail: string;
 
-  @Column({ name: 'costumer_image' })
-  costumerImage: string;
+  @Column({ name: 'customer_image' })
+  customerImage: string;
 
   @Column({
     name: 'status',

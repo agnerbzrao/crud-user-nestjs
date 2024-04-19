@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { Status } from 'src/costumer/enum/status.enum';
-export class CreateCostumerTable1707869761430 implements MigrationInterface {
+import { Status } from 'src/customer/enum/status.enum';
+export class CreateCustomerTable1707869761430 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'costumer',
+        name: 'customer',
         columns: [
           {
             name: 'id',
@@ -14,17 +14,17 @@ export class CreateCostumerTable1707869761430 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'costumer_name',
+            name: 'customer_name',
             type: 'varchar',
             isNullable: false,
           },
           {
-            name: 'costumer_email',
+            name: 'customer_email',
             type: 'varchar',
             isNullable: false,
           },
           {
-            name: 'costumer_image',
+            name: 'customer_image',
             type: 'varchar',
             isNullable: false,
             default: false,
@@ -62,6 +62,6 @@ export class CreateCostumerTable1707869761430 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('costumer');
+    await queryRunner.dropTable('customer');
   }
 }
