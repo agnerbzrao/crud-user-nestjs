@@ -110,8 +110,14 @@ export class CustomerService {
     const customer = await this.customerRepository.findOneBy({ id });
 
     if (customer) {
+      await fs.unlink(
+        path.join(process.cwd(), this.beginOfPathFile + customer.customerImage),
+      );
+
       await this.customerRepository.softDelete(id);
-      return res.status(200).json({ msg: 'Customer deleted successfully.' });
+      return res
+        .status(200)
+        .json({ message: 'Customer deleted successfully.' });
     }
     throw new NotFoundException({
       message: `Customer with id ${id} not found`,

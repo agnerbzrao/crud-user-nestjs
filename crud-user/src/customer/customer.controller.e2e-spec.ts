@@ -2,79 +2,147 @@ import * as request from 'supertest';
 
 const baseURL = process.env.API_URL;
 
-describe('Test the costumer controller (e2e)', () => {
+describe('Test the customer controller (e2e)', () => {
   const apiRequest = request(baseURL);
+  let idUserCreated = null;
 
-  // it('should the response be equal 201', async () => {
-  //   const response = await apiRequest
-  //     .post('/customer')
-  //     .field({
-  //       costumerName: 'Agner Functional Test',
-  //       costumerEmail: 'agner.functional.test@test.com',
-  //       status: 'active',
-  //     })
-  //     .attach('costumerImage', './test/image/cachorrinhos-filhotes.jpg');
-  //   console.log(response.body);
+  it('should create a new customer without image and data body and the response must be equal 400', async () => {
+    const response = await apiRequest.post('/customer');
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      message: 'customerImage field is required',
+      error: 'Bad Request',
+      statusCode: 400,
+    });
+  });
 
-  //   expect(response.status).toBe(201);
-  // });
+  it('should create a new customer with image but without data body and the response must be equal 400', async () => {
+    const response = await apiRequest
+      .post('/customer')
+      .attach('customerImage', './test/image/cachorrinhos-filhotes.jpg');
 
-  // it('should the response be equal 200', async () => {
-  //   const response = await apiRequest
-  //     .put('/customer')
-  //     .field({
-  //       costumerName: 'Agner Functional Test Put',
-  //     });
-  //   expect(response.status).toBe(200);
-  // });
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({
+      message: [
+        'The field customerName is too long',
+        'The e-mail must have @ and .com',
+        'The field status is required',
+      ],
+      error: 'Bad Request',
+      statusCode: 400,
+    });
+  });
 
-  // it('should the response be equal 200', async () => {
-  //   const response = await apiRequest.get('/customer');
-  //   expect(response.status).toBe(200);
-  // });
+  it('should create a new customer and the response must be equal 201', async () => {
+    const response = await apiRequest
+      .post('/customer')
+      .field({
+        customerName: 'Agner Functional Test',
+        customerEmail: 'agner.functional.test@test.com',
+        status: 'active',
+      })
+      .attach('customerImage', './test/image/cachorrinhos-filhotes.jpg');
 
-  // it('should the response be equal 200', async () => {
-  //   const response = await apiRequest.get('/customer/all-customers');
-  //   expect(response.status).toBe(200);
-  // });
+    expect(response.status).toBe(201);
+    idUserCreated = response?.body?.id;
+  });
 
-  // it('should the response be equal 200 and equal specifics object propertys', async () => {
-  //   const response = await apiRequest.get('/customer/2');
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toMatchObject({
-  //     id: 2,
-  //     costumerName: 'Agner Souza',
-  //     costumerEmail: 'agner2@teste.com',
-  //     costumerImage: 'site-05fa0544-e157-4e91-b406-d52b6beecf43.jpg',
-  //     status: 'active',
-  //   });
-  //   expect(response.body).toHaveProperty('createdAt');
-  //   expect(response.body).toHaveProperty('updatedAt');
-  //   expect(response.body).toHaveProperty('deletedAt');
-  // });
+  it('should search a specific customer and the response be equal 200 and equal specifics object propertys', async () => {
+    const response = await apiRequest.get(`/customer/${idUserCreated}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      id: idUserCreated,
+      customerName: 'Agner Functional Test',
+      customerEmail: 'agner.functional.test@test.com',
+      status: 'active',
+    });
+    expect(response.body).toHaveProperty('customerImage');
+    expect(response.body).toHaveProperty('createdAt');
+    expect(response.body).toHaveProperty('updatedAt');
+    expect(response.body).toHaveProperty('deletedAt');
+  });
 
-  // it('should the response be equal 404 and recive the message costumer not found', async () => {
-  //   const response = await apiRequest.get('/customer/999999999999999');
-  //   expect(response.status).toBe(404);
-  //   expect(response.body).toEqual({
-  //     message: 'Costumer with id 999999999999999 not found',
-  //   });
-  // });
+  it('should update a specific customer and the response be equal 404 and recive the message customer not found', async () => {
+    const response = await apiRequest.put('/customer/999999999999999');
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      message: 'Customer with id 999999999999999 not found',
+    });
+  });
 
-  // it('should the response be equal 200 and equal specifics property', async () => {
-  //   const response = await apiRequest.get('/customer/costumer-image-buffer/2');
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toMatchObject({ type: 'Buffer' });
-  //   expect(response.body).toHaveProperty('data');
-  // });
+  it('should update a specific customer and the response be equal 200', async () => {
+    const response = await apiRequest.put(`/customer/${idUserCreated}`).field({
+      customerName: 'Agner Functional Test Put',
+      customerEmail: 'agner.functional.test.put@test.com',
+    });
+    expect(response.status).toBe(200);
+  });
 
-  // it('should the response be equal 404 and recive the message costumer not found', async () => {
-  //   const response = await apiRequest.get(
-  //     '/customer/costumer-image-buffer/999999999999999',
-  //   );
-  //   expect(response.status).toBe(404);
-  //   expect(response.body).toEqual({
-  //     message: 'Costumer image with id 999999999999999 not found',
-  //   });
-  // });
+  it('should search a specific customer after update and the response be equal 200 and equal specifics object propertys', async () => {
+    const response = await apiRequest.get(`/customer/${idUserCreated}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({
+      id: idUserCreated,
+      customerName: 'Agner Functional Test Put',
+      customerEmail: 'agner.functional.test.put@test.com',
+      status: 'active',
+    });
+    expect(response.body).toHaveProperty('customerImage');
+    expect(response.body).toHaveProperty('createdAt');
+    expect(response.body).toHaveProperty('updatedAt');
+    expect(response.body).toHaveProperty('deletedAt');
+  });
+
+  it('should search all customer and the response be equal 200', async () => {
+    const response = await apiRequest.get('/customer');
+    expect(response.status).toBe(200);
+  });
+
+  it('should search all customers even them deleted and the response be equal 200', async () => {
+    const response = await apiRequest.get('/customer/all-customers');
+    expect(response.status).toBe(200);
+  });
+
+  it('should searh a specific customer and the response be equal 404 and recive the message customer not found', async () => {
+    const response = await apiRequest.get('/customer/999999999999999');
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      message: 'Customer with id 999999999999999 not found',
+    });
+  });
+
+  it('should search a specific customer image and the response be equal 200 and equal specifics property', async () => {
+    const response = await apiRequest.get(
+      `/customer/customer-image-buffer/${idUserCreated}`,
+    );
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({ type: 'Buffer' });
+    expect(response.body).toHaveProperty('data');
+  });
+
+  it('should search a specific customer image and the response be equal 404 and recive the message customer not found', async () => {
+    const response = await apiRequest.get(
+      '/customer/customer-image-buffer/999999999999999',
+    );
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      message: 'Customer image with id 999999999999999 not found',
+    });
+  });
+
+  it('should delete a specific customer and the response be equal 200', async () => {
+    const response = await apiRequest.delete(`/customer/${idUserCreated}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      message: 'Customer deleted successfully.',
+    });
+  });
+
+  it('should delete a specific customer and the response be equal 404', async () => {
+    const response = await apiRequest.delete(`/customer/999999999999999`);
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      message: 'Customer with id 999999999999999 not found',
+    });
+  });
 });

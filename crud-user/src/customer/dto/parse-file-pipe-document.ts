@@ -8,7 +8,7 @@ export function getFileValidator(): PipeTransform {
 export class ParseFilePipeDocument implements PipeTransform {
   transform(value: Express.Multer.File): Express.Multer.File {
     if (!value) {
-      throw new BadRequestException(`costumerImage field is required`);
+      throw new BadRequestException(`customerImage field is required`);
     }
     return value;
   }
