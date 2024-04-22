@@ -5,12 +5,29 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Response } from 'express';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
+import { IsNull, Not } from 'typeorm';
 
-const customerSrvcResponseMock = {
-  customerName: 'Agner Functional Test',
-  customerEmail: 'agner.functional.test@test.com',
-  status: 'active',
-};
+jest.mock('typeorm', () => {
+  const actual = jest.requireActual('typeorm');
+  return {
+    ...actual,
+    IsNull: jest.fn(),
+    Not: jest.fn(),
+  };
+});
+
+const customerSrvcResponseMock = [
+  {
+    customerName: 'Agner Functional Test',
+    customerEmail: 'agner.functional.test@test.com',
+    status: 'active',
+  },
+  {
+    customerName: 'Fulano Functional Test',
+    customerEmail: 'fulano.functional.test@test.com',
+    status: 'active',
+  },
+];
 
 describe('TweetsService', () => {
   let customerSrvc: CustomerService;
@@ -39,11 +56,11 @@ describe('TweetsService', () => {
     );
   });
 
-  it('should be defined', () => {
-    expect(customerSrvc).toBeDefined();
-  });
+  describe('Unit test on the customer service', () => {
+    it('should be defined', () => {
+      expect(customerSrvc).toBeDefined();
+    });
 
-  describe('getAll', () => {
     it('should be called the method find', async () => {
       await customerSrvc.findAll(res);
       const repoSpy = jest.spyOn(customerRepo, 'find');
@@ -59,6 +76,19 @@ describe('TweetsService', () => {
 
       expect(responseFindAll).rejects.toThrow(NotFoundException);
       expect(responseFindAll).rejects.toThrow(`Anyone customer was found`);
+    });
+
+    it('should be called the method find with where and withDeleted parameters', async () => {
+      await customerSrvc.findForAllCustomersEvenDeleted(res);
+      const repoSpy = jest.spyOn(customerRepo, 'find');
+      expect(repoSpy).toHaveBeenCalled();
+      expect(repoSpy).toHaveBeenCalledTimes(1);
+      expect(repoSpy).toHaveBeenCalledWith({
+        where: {
+          deleteAt: Not(IsNull),
+        },
+        withDeleted: true,
+      });
     });
   });
 });
