@@ -1,8 +1,8 @@
 {
   "name": "crud-user",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "A back-end customer crud example",
+  "author": "Agner Souza Bezerra",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
