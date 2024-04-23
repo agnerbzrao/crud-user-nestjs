@@ -51,6 +51,7 @@ export class CustomerService {
       message: `Customer with id ${id} not found`,
     });
   }
+
   async getCustomerImageBuffer(id: number, res: Response) {
     const customer = await this.customerRepository.findOneBy({ id });
     if (customer) {
