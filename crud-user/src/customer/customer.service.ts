@@ -55,10 +55,10 @@ export class CustomerService {
   async getCustomerImageBuffer(id: number, res: Response) {
     const customer = await this.customerRepository.findOneBy({ id });
     if (customer) {
-      const teste = await fs.readFile(
+      const resultImageBuffer = await fs.readFile(
         this.beginOfPathFile + customer?.customerImage,
       );
-      return res.status(200).json(teste);
+      return res.status(200).json(resultImageBuffer);
     }
     throw new NotFoundException({
       message: `Customer image with id ${id} not found`,

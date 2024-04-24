@@ -6,6 +6,8 @@ import { Response } from 'express';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { IsNull, Not } from 'typeorm';
+import { Status } from './enum/status.enum';
+import * as fs from 'fs/promises';
 
 jest.mock('typeorm', () => {
   const actual = jest.requireActual('typeorm');
@@ -15,40 +17,63 @@ jest.mock('typeorm', () => {
     Not: jest.fn(),
   };
 });
+jest.mock('fs/promises', () => {
+  const actual = jest.requireActual('fs/promises');
+  return {
+    ...actual,
+    readFile: jest.fn(),
+  };
+});
 
 const customerSrvcResponseMock = [
   {
     id: 1,
     customerName: 'Agner Functional Test',
     customerEmail: 'agner.functional.test@test.com',
-    status: 'active',
+    status: Status.ACTIVE,
     customerImage: 'MockTest',
-    createdAt: 'MockTest',
-    updatedAt: 'MockTest',
-    deletedAt: 'MockTest',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: new Date(),
   },
   {
     id: 2,
     customerName: 'Fulano Functional Test',
     customerEmail: 'fulano.functional.test@test.com',
-    status: 'active',
+    status: Status.ACTIVE,
     customerImage: 'MockTest',
-    createdAt: 'MockTest',
-    updatedAt: 'MockTest',
-    deletedAt: 'MockTest',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: new Date(),
   },
 ];
 const oneCustomerSrvcResponseMock = {
   id: 3,
   customerName: 'Agner Functional Test',
   customerEmail: 'agner.functional.test@test.com',
-  status: 'active',
+  status: Status.ACTIVE,
   customerImage: 'MockTest',
-  createdAt: 'MockTest',
-  updatedAt: 'MockTest',
-  deletedAt: 'MockTest',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  deletedAt: new Date(),
 };
+const mockToinsertCustomer = {
+  customerEmail: 'agner.functional.test@test.com',
+  customerImage: 'fileMock',
+  customerName: 'Agner Functional Test',
+  status: Status.ACTIVE,
+};
+const expressMuterFile = {
+  filename: 'fileMock',
+  originalname: 'cachorrinhos-filhotes.Mock.png',
+  size: 51828,
+} as Express.Multer.File;
 
+const customerRepositoryMockToInsert = {
+  customerName: 'customerNameMock',
+  customerEmail: 'customerEmailMock',
+  customerImage: 'filenameMock',
+};
 describe('Test the CustomerService', () => {
   let customerSrvc: CustomerService;
   let customerRepo: Repository<Customer>;
@@ -66,7 +91,9 @@ describe('Test the CustomerService', () => {
           provide: getRepositoryToken(Customer),
           useValue: {
             find: jest.fn().mockResolvedValue(customerSrvcResponseMock),
-            findOneBy: jest.fn().mockResolvedValue(oneCustomerSrvcResponseMock),
+            findOneBy: jest.fn().mockResolvedValue(mockToinsertCustomer),
+            create: jest.fn().mockResolvedValue(customerRepositoryMockToInsert),
+            save: jest.fn(),
           },
         },
       ],
@@ -142,5 +169,34 @@ describe('Test the CustomerService', () => {
     expect(responseFindOne).rejects.toThrow(
       `Customer with id ${idUser} not found`,
     );
+  });
+
+  it('should be called the method getCustomerImageBuffer with idUser', async () => {
+    await customerSrvc.getCustomerImageBuffer(idUser, res);
+    const repoSpy = jest.spyOn(customerRepo, 'findOneBy');
+    expect(repoSpy).toHaveBeenCalled();
+    expect(repoSpy).toHaveBeenCalledTimes(1);
+    expect(repoSpy).toHaveBeenCalledWith({ id: idUser });
+  });
+
+  it('should be called method getCustomerImageBuffer with idUser and it throw NotFoundException', async () => {
+    jest.spyOn(customerRepo, 'findOneBy').mockResolvedValue(null);
+    const responseFindOne = async () => {
+      await customerSrvc.getCustomerImageBuffer(idUser, res);
+    };
+
+    expect(responseFindOne).rejects.toThrow(NotFoundException);
+    expect(responseFindOne).rejects.toThrow(
+      `Customer image with id ${idUser} not found`,
+    );
+  });
+
+  it('should be called the method create and insert a customer with image', async () => {
+    await customerSrvc.create(expressMuterFile, oneCustomerSrvcResponseMock);
+    expect(customerRepo.create).toHaveBeenCalled();
+    expect(customerRepo.create).toHaveBeenCalledTimes(1);
+    expect(customerRepo.create).toHaveBeenCalledWith(mockToinsertCustomer);
+    expect(customerRepo.save).toHaveBeenCalled();
+    expect(customerRepo.save).toHaveBeenCalledTimes(1);
   });
 });
