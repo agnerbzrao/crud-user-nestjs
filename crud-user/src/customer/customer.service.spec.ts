@@ -7,7 +7,8 @@ import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { IsNull, Not } from 'typeorm';
 import { Status } from './enum/status.enum';
-import * as fs from 'fs/promises';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import fs from 'fs/promises';
 
 jest.mock('typeorm', () => {
   const actual = jest.requireActual('typeorm');
@@ -17,11 +18,13 @@ jest.mock('typeorm', () => {
     Not: jest.fn(),
   };
 });
+
 jest.mock('fs/promises', () => {
   const actual = jest.requireActual('fs/promises');
   return {
     ...actual,
     readFile: jest.fn(),
+    unlink: jest.fn(),
   };
 });
 
@@ -94,6 +97,7 @@ describe('Test the CustomerService', () => {
             findOneBy: jest.fn().mockResolvedValue(mockToinsertCustomer),
             create: jest.fn().mockResolvedValue(customerRepositoryMockToInsert),
             save: jest.fn(),
+            update: jest.fn(),
           },
         },
       ],
@@ -198,5 +202,32 @@ describe('Test the CustomerService', () => {
     expect(customerRepo.create).toHaveBeenCalledWith(mockToinsertCustomer);
     expect(customerRepo.save).toHaveBeenCalled();
     expect(customerRepo.save).toHaveBeenCalledTimes(1);
+  });
+
+  it('should be called the method update and update a customer with image', async () => {
+    const repoSpyFindOneBy = jest.spyOn(customerRepo, 'findOneBy');
+    const repoSpyDeleteFile = jest.spyOn(customerSrvc, 'deleteFile');
+    await customerSrvc.update(
+      expressMuterFile,
+      idUser,
+      mockToinsertCustomer,
+      res,
+    );
+
+    expect(repoSpyFindOneBy).toHaveBeenCalled();
+    expect(repoSpyFindOneBy).toHaveBeenCalledTimes(1);
+    expect(repoSpyFindOneBy).toHaveBeenCalledWith({ id: idUser });
+    expect(customerRepo.update).toHaveBeenCalled();
+    expect(customerRepo.update).toHaveBeenCalledTimes(1);
+    expect(customerRepo.update).toHaveBeenCalledWith(
+      { id: idUser },
+      mockToinsertCustomer,
+    );
+    expect(repoSpyDeleteFile).toHaveBeenCalled();
+    expect(repoSpyDeleteFile).toHaveBeenCalledTimes(1);
+    expect(repoSpyDeleteFile).toHaveBeenCalledWith(
+      'fileMock',
+      expressMuterFile,
+    );
   });
 });
