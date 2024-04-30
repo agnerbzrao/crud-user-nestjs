@@ -98,6 +98,7 @@ describe('Test the CustomerService', () => {
             create: jest.fn().mockResolvedValue(customerRepositoryMockToInsert),
             save: jest.fn(),
             update: jest.fn(),
+            softDelete: jest.fn(),
           },
         },
       ],
@@ -229,5 +230,21 @@ describe('Test the CustomerService', () => {
       'fileMock',
       expressMuterFile,
     );
+  });
+
+  it('should be called the method delete and delete a customer with image', async () => {
+    const repoSpyFindOneBy = jest.spyOn(customerRepo, 'findOneBy');
+    const repoSpyDeleteFile = jest.spyOn(customerSrvc, 'delete');
+    await customerSrvc.delete(idUser, res);
+
+    expect(repoSpyFindOneBy).toHaveBeenCalled();
+    expect(repoSpyFindOneBy).toHaveBeenCalledTimes(1);
+    expect(repoSpyFindOneBy).toHaveBeenCalledWith({ id: idUser });
+    expect(customerRepo.softDelete).toHaveBeenCalled();
+    expect(customerRepo.softDelete).toHaveBeenCalledTimes(1);
+    expect(customerRepo.softDelete).toHaveBeenCalledWith(idUser);
+    expect(repoSpyDeleteFile).toHaveBeenCalled();
+    expect(repoSpyDeleteFile).toHaveBeenCalledTimes(1);
+    expect(repoSpyDeleteFile).toHaveBeenCalledWith(idUser, res);
   });
 });
