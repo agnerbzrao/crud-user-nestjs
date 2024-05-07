@@ -1,21 +1,31 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { MongoRepository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { BaseUser } from './dto/base-user.dto';
+import { Response } from 'express';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
-    private userRepository: MongoRepository<UserEntity>,
+    private userRepository: Repository<UserEntity>,
   ) {}
   async findOneBy(email: string): Promise<UserEntity | undefined> {
-    return await this.userRepository.findOneBy({ email: email });
+    return await this.userRepository.findOneBy({ userEmail: email });
   }
-  async create(createUserDto: CreateUserDto) {
-    return this.userRepository.save({
-      ...createUserDto,
-      createdAt: new Date(),
-    });
+  async create(createUserDto: BaseUser, res: Response) {
+    try {
+      console.log(createUserDto.userPassword);
+      if (createUserDto.userPassword !== createUserDto.userConfirmPassword) {
+        throw new BadRequestException({
+          message: `The passwords didn't match`,
+        });
+      }
+      return res.status(200).json({ msg: 'User has created successfully.' });
+    } catch (error) {
+      return error.message;
+    }
+
+    // return await this.userRepository.save(createUserDto);
   }
 }

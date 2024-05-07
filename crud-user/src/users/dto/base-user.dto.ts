@@ -1,8 +1,6 @@
 export class BaseUser {
-  id?: string;
-  username?: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-  designation?: string;
+  userName: string;
+  userEmail: string;
+  userPassword: string;
+  userConfirmPassword: string;
 }
