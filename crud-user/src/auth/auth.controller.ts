@@ -13,11 +13,10 @@ export class AuthController {
   signIn(@Body() signInDto: Record<string, any>) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
+
   @Public()
   @Post('signup')
   signUp(@Body() signUpDto: BaseUser, res: Response) {
-    console.log(signUpDto);
-
     const payload = {
       userName: signUpDto.userName,
       userEmail: signUpDto.userEmail,
@@ -25,6 +24,10 @@ export class AuthController {
       userConfirmPassword: signUpDto.userConfirmPassword,
       createdAt: new Date(),
     };
-    return this.authService.signUp(payload, res);
+    try {
+      return this.authService.signUp(payload, res);
+    } catch (error) {
+      return error.message;
+    }
   }
 }

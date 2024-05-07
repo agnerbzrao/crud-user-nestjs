@@ -14,17 +14,12 @@ export class UsersService {
     return await this.userRepository.findOneBy({ userEmail: email });
   }
   async create(createUserDto: BaseUser, res: Response) {
-    try {
-      console.log(createUserDto.userPassword);
-      if (createUserDto.userPassword !== createUserDto.userConfirmPassword) {
-        throw new BadRequestException({
-          message: `The passwords didn't match`,
-        });
-      }
-      return res.status(200).json({ msg: 'User has created successfully.' });
-    } catch (error) {
-      return error.message;
+    if (createUserDto.userPassword !== createUserDto.userConfirmPassword) {
+      throw new BadRequestException({
+        message: `The passwords didn't match`,
+      });
     }
+    return res.status(201).json({ msg: 'User has created successfully.' });
 
     // return await this.userRepository.save(createUserDto);
   }

@@ -20,9 +20,6 @@ export class AuthService {
     };
   }
   async signUp(payload: BaseUser, res: Response) {
-    console.log(payload);
-
-    const user = await this.usersService.create(payload, res);
-    return user;
+    await this.usersService.create(payload, res);
   }
 }
