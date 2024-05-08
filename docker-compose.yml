@@ -36,6 +36,7 @@ services:
       - DB_PORT=$DATABSE_DOCKER_PORT
       - API_URL=$API_URL
       - API_PORT=$NESTJS_PROJECT_DOCKER_PORT
+      - JWT_SECRET=$JWT_SECRET
     stdin_open: true
     tty: true
     volumes:
