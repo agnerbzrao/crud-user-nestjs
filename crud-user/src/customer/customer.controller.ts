@@ -19,7 +19,9 @@ import { Response } from 'express';
 import multerConfig from '../files/multer-config';
 import { getFileValidator } from './dto/parse-file-pipe-document';
 import { HttpExceptionFilter } from './dto/delete-file-on-error-filter';
+import { Public } from '../auth/public-strategy';
 
+@Public()
 @UseFilters(HttpExceptionFilter)
 @Controller('customer')
 export class CustomerController {
