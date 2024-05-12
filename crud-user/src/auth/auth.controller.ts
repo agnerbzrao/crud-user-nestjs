@@ -1,31 +1,42 @@
-import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-
 import { Public } from '../auth/public-strategy';
 import { BaseUser } from 'src/users/dto/base-user.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
   @Public()
-  @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.email, signInDto.password);
+  signIn(@Body() signUpDto) {
+    return this.authService.signIn(signUpDto);
   }
 
   @Public()
   @Post('signup')
-  signUp(@Body() signUpDto: BaseUser, res: Response) {
-    const payload = {
-      userName: signUpDto.userName,
-      userEmail: signUpDto.userEmail,
-      userPassword: signUpDto.userPassword,
-      userConfirmPassword: signUpDto.userConfirmPassword,
-      createdAt: new Date(),
-    };
+  async signUp(@Body() signUpDto: BaseUser, @Res() res: Response) {
     try {
-      return this.authService.signUp(payload, res);
+      const payload = {
+        userName: signUpDto.userName,
+        userEmail: signUpDto.userEmail,
+        userPassword: signUpDto.userPassword,
+        userConfirmPassword: signUpDto.userConfirmPassword,
+        createdAt: new Date(),
+      };
+      const result = await this.authService.signUp(payload, res);
+
+      return res.status(result.status).json(result.response);
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  @Public()
+  @Get('get-all-users')
+  async getUsers(@Res() res: Response) {
+    try {
+      return await this.authService.getUsers(res);
     } catch (error) {
       return error.message;
     }
