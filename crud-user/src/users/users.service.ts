@@ -37,11 +37,12 @@ export class UsersService {
       delete createUserDto.userConfirmPassword;
 
       const user = this.userRepository.create(createUserDto);
-      await this.userRepository.save(user);
+      const userCreated = await this.userRepository.save(user);
 
-      return res
-        .status(201)
-        .json({ message: 'User has created successfully.' });
+      return res.status(201).json({
+        message: 'User has created successfully.',
+        userData: userCreated,
+      });
     } catch (error) {
       return error;
     }
