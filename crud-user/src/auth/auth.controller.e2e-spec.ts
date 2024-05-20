@@ -4,7 +4,8 @@ const baseURL = process.env.API_URL;
 
 describe('Test the auth controller (e2e)', () => {
   const apiRequest = request(baseURL);
-  it('should create a new user and the response must be equal 400', async () => {
+  let userId = null;
+  it('should not create a new user and the response must be equal 400', async () => {
     const response = await apiRequest
       .post('/auth/signup')
       .send({
@@ -31,9 +32,10 @@ describe('Test the auth controller (e2e)', () => {
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
     expect(response.status).toBe(201);
-    expect(response.body.message).toEqual({
+    expect(response.body).toEqual({
       message: 'User has created successfully.',
     });
+    userId = response.body.userData.id;
   });
 
   it('should get all users and the response must be equal 200', async () => {
@@ -46,5 +48,9 @@ describe('Test the auth controller (e2e)', () => {
     expect(response.body[0]).toHaveProperty('createdAt');
     expect(response.body[0]).toHaveProperty('updatedAt');
     expect(response.body[0]).toHaveProperty('deletedAt');
+  });
+  it('should get all users and the response must be equal 200', async () => {
+    const response = await apiRequest.delete(`/auth/${userId}`);
+    expect(response.status).toEqual(200);
   });
 });
