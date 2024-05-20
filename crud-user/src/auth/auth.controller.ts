@@ -1,4 +1,13 @@
-import { Body, Controller, Post, Get, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Res,
+  HttpStatus,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { Public } from '../auth/public-strategy';
@@ -9,8 +18,9 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  signIn(@Body() signUpDto) {
-    return this.authService.signIn(signUpDto);
+  async signIn(@Body() signUpDto, @Res() res: Response) {
+    const token = await this.authService.signIn(signUpDto);
+    return res.status(HttpStatus.OK).json(token);
   }
 
   @Public()
@@ -32,7 +42,6 @@ export class AuthController {
     }
   }
 
-  @Public()
   @Get('get-all-users')
   async getUsers(@Res() res: Response) {
     try {
@@ -40,5 +49,10 @@ export class AuthController {
     } catch (error) {
       return error.message;
     }
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: number, @Res() res: Response) {
+    return this.authService.deleteUser(+id, res);
   }
 }
