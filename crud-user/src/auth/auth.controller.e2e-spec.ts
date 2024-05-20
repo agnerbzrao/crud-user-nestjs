@@ -4,9 +4,10 @@ const baseURL = process.env.API_URL;
 
 describe('Test the auth controller (e2e)', () => {
   let accessToken = null;
-  const idUserToDelete = null;
+  let idUserToDelete = null;
   const apiRequest = request(baseURL);
-  it('should create a new user and the response must be equal 400', async () => {
+
+  it('should not create a new user and the response must be equal 400', async () => {
     const response = await apiRequest
       .post('/auth/signup')
       .send({
@@ -33,7 +34,10 @@ describe('Test the auth controller (e2e)', () => {
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
     expect(response.status).toBe(201);
-    expect(response.body.message).toEqual('User has created successfully.');
+    expect(response.body).toEqual({
+      message: 'User has created successfully.',
+    });
+    idUserToDelete = response.body.userData.id;
   });
 
   it('should do a login with user and password and the response must be equal 200', async () => {
