@@ -6,7 +6,6 @@ describe('Test the auth controller (e2e)', () => {
   let accessToken = null;
   let idUserToDelete = null;
   const apiRequest = request(baseURL);
-
   it('should not create a new user and the response must be equal 400', async () => {
     const response = await apiRequest
       .post('/auth/signup')
