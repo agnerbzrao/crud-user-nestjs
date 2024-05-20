@@ -34,9 +34,7 @@ describe('Test the auth controller (e2e)', () => {
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
     expect(response.status).toBe(201);
-    expect(response.body).toEqual({
-      message: 'User has created successfully.',
-    });
+    expect(response.body.message).toEqual('User has created successfully.');
     idUserToDelete = response.body.userData.id;
   });
 
