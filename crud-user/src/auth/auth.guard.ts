@@ -24,7 +24,9 @@ export class AuthGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
+
     const token = this.extractTokenFromHeader(request);
+
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -34,8 +36,8 @@ export class AuthGuard implements CanActivate {
       });
       request['user'] = payload;
       return true;
-    } catch {
-      throw new UnauthorizedException();
+    } catch (error) {
+      return error.message;
     }
   }
   private extractTokenFromHeader(request: Request): string | undefined {
