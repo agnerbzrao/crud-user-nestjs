@@ -60,4 +60,8 @@ export class AuthService {
   async getUsers(res: Response) {
     await this.usersService.findAllUsers(res);
   }
+
+  async deleteUser(id: number, res: Response) {
+    await this.usersService.deleteUser(id, res);
+  }
 }
