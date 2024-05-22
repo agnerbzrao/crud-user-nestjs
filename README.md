@@ -48,7 +48,7 @@ The crud-user container requires two tables: the customer and user table. So cre
 
 
 ```
-npm run migration:create
+npm run migration:run
 
 ```
 
