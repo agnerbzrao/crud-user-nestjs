@@ -22,7 +22,7 @@ services:
       - mysql-db
     build:
       context: ./crud-user
-      dockerfile: Dockerfile
+      dockerfile: ../Dockerfile
     restart: unless-stopped
     env_file: ./.env
     ports:

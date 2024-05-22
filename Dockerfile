@@ -1,7 +1,7 @@
-FROM node:20.11-alpine
+FROM node:20.13.1-alpine
 WORKDIR /app
 COPY package.json ./
-COPY package-lock.yaml ./
+COPY package-lock.json ./
 COPY ./ ./
-RUN npm ci -g npm@10.7.0
-CMD npm run start 
+RUN npm i && npm i -g @nestjs/cli
+CMD npm run start:dev 
