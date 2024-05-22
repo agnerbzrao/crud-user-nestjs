@@ -35,7 +35,7 @@ docker-compose up --build
 
 This command will instruct Docker to build two containers: one for the NestJS project and the other for a MySQL database.
 
-The Dockerfile file will execute the commands ``npm run ci`` and ``npm run start``.
+The Dockerfile file will execute the commands ``npm i && npm i -g @nestjs/cli`` and ``npm run start:dev``.
 
 The final step, to access the crud-user container, use the following command in your terminal:
 
