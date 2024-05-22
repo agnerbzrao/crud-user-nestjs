@@ -127,7 +127,17 @@ describe('Test the customer controller (e2e)', () => {
       .get('/customer')
       .set('Authorization', `Bearer ${accessToken}`);
     expect(response.status).toBe(200);
+    
   });
+
+  it('should search all customer without access_token and the response be equal 401', async () => {
+    const response = await apiRequest
+      .get('/customer')
+      // .set('Authorization', `Bearer ${accessToken}`);
+    expect(response.status).toBe(401);
+    expect(response.body.message).toEqual('Unauthorized')
+    
+  });  
 
   it('should search all customers even them deleted and the response be equal 200', async () => {
     const response = await apiRequest
