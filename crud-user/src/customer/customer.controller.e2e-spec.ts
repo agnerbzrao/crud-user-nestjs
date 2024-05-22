@@ -18,6 +18,7 @@ describe('Test the customer controller (e2e)', () => {
     expect(response.status).toBe(200);
     expect(response.body).toHaveProperty('access_token');
     accessToken = response?.body?.access_token;
+    
   });
 
   it('should create a new customer without image and data body and the response must be equal 400', async () => {
@@ -62,6 +63,7 @@ describe('Test the customer controller (e2e)', () => {
       .set('Authorization', `Bearer ${accessToken}`);
 
     expect(response.status).toBe(201);
+    
     idUserCreated = response?.body?.id;
   });
 
