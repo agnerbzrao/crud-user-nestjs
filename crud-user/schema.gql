@@ -4,10 +4,13 @@
 
 type Book {
   id: ID!
+  title: String!
+  description: String!
 }
 
 type Query {
-  book(id: ID!): Book!
+  findAll: [Book!]!
+  findOne(id: ID!): Book!
 }
 
 type Mutation {
