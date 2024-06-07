@@ -14,7 +14,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
   async signIn(user: any) {
     try {
       const userValidation = await this.validateUser(
@@ -28,7 +28,7 @@ export class AuthService {
       return {
         access_token: this.jwtService.sign(payload),
       };
-    } catch (error) {
+    } catch (error: any) {
       return error.message;
     }
   }
@@ -36,7 +36,7 @@ export class AuthService {
   async signUp(payload: BaseUser, res: Response) {
     try {
       return await this.usersService.create(payload, res);
-    } catch (error) {
+    } catch (error: any) {
       return error.message;
     }
   }

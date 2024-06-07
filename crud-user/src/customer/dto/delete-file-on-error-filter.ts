@@ -22,6 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
           console.error(err);
           return err;
         }
+        return null
       });
     }
     return response.status(status).json(exception.getResponse());

@@ -14,7 +14,7 @@ import { Public } from '../auth/public-strategy';
 import { BaseUser } from 'src/users/dto/base-user.dto';
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Public()
   @Post('login')
@@ -37,7 +37,7 @@ export class AuthController {
       const result = await this.authService.signUp(payload, res);
 
       return res.status(result.status).json(result.response);
-    } catch (error) {
+    } catch (error: any) {
       return error.message;
     }
   }
@@ -46,7 +46,7 @@ export class AuthController {
   async getUsers(@Res() res: Response) {
     try {
       return await this.authService.getUsers(res);
-    } catch (error) {
+    } catch (error: any) {
       return error.message;
     }
   }

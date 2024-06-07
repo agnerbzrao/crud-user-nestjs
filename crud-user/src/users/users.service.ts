@@ -15,7 +15,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
   async findOneBy(email: string): Promise<User | undefined> {
     return await this.userRepository.findOneBy({ userEmail: email });
   }
@@ -69,7 +69,7 @@ export class UsersService {
       throw new NotFoundException({
         message: `User with id ${id} not found`,
       });
-    } catch (error) {
+    } catch (error: any) {
       return error?.message;
     }
   }
