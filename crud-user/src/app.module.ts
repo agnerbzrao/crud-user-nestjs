@@ -9,7 +9,8 @@ import { UsersModule } from './users/users.module';
 import typeOrmConfig from './config/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { BookResolver } from './book/book.resolver';
+import { join } from 'path';
+import { BookModule } from './book/book.module';
 
 @Module({
   imports: [
@@ -24,13 +25,14 @@ import { BookResolver } from './book/book.resolver';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',  // Generates schema automatically in memory,
+      autoSchemaFile: join(process.cwd(), '/schema.gql'),
     }),
     CustomerModule,
     AuthModule,
     UsersModule,
+    BookModule,
   ],
   controllers: [AppController],
-  providers: [AppService, BookResolver],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

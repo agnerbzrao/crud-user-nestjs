@@ -4,10 +4,25 @@
 
 type Book {
   id: ID!
-  title: String!
-  description: String
 }
 
 type Query {
-  recipes: [Book!]!
+  book(id: ID!): Book!
+}
+
+type Mutation {
+  createBook(createBookInput: CreateBookInput!): Book!
+  updateBook(updateBookInput: UpdateBookInput!): Book!
+  removeBook(id: Int!): Book!
+}
+
+input CreateBookInput {
+  title: String!
+  description: String!
+}
+
+input UpdateBookInput {
+  title: String
+  description: String
+  id: ID!
 }
