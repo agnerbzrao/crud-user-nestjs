@@ -54,15 +54,15 @@ export class UsersService {
       return res.status(200).json(users);
     }
     throw new NotFoundException({
-      message: `Anyone customer was found`,
+      message: `Anyone user was found`,
     });
   }
 
   async deleteUser(id: number, res: Response) {
     try {
-      const customer = await this.userRepository.findOneBy({ id });
+      const user = await this.userRepository.findOneBy({ id });
 
-      if (customer) {
+      if (user) {
         await this.userRepository.softDelete(id);
         return res.status(200).json({ message: 'User deleted successfully.' });
       }
