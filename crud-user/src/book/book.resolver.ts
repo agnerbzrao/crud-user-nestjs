@@ -20,12 +20,12 @@ export class BookResolver {
     }
   }
 
-  @Query(() => [BookEntity], { name: 'book' })
+  @Query(() => [BookEntity])
   findAll() {
     return this.bookService.findAll();
   }
 
-  @Query(() => BookEntity, { name: 'book' })
+  @Query(() => BookEntity)
   findOne(@Args('id', { type: () => ID }) id: number) {
     return this.bookService.findOne(id);
   }

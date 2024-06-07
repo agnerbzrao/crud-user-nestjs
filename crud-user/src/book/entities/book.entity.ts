@@ -8,9 +8,11 @@ export class Book {
   @Field(() => ID)
   id: number;
 
+  @Field()
   @Column()
   title: string;
 
+  @Field()
   @Column()
   description: string;
 }
