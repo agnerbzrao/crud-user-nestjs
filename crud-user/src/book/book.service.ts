@@ -14,7 +14,7 @@ export class BookService {
   constructor(
     @InjectRepository(BookEntity)
     private bookRepository: Repository<BookEntity>,
-  ) {}
+  ) { }
   async create(createBookInput: CreateBookInput) {
     const { title, description } = createBookInput;
     const check = await this.bookRepository.findOne({
@@ -50,16 +50,19 @@ export class BookService {
       });
     }
 
-    return await this.bookRepository.update({ id }, updateBookInput);
+    await this.bookRepository.update({ id }, updateBookInput);
+    return updateBookInput;
   }
 
   async remove(id: number) {
     const book = await this.bookRepository.findOneBy({ id });
+
     if (!book) {
       throw new NotFoundException({
         message: `Book with id ${id} not found`,
       });
     }
-    return await this.bookRepository.softDelete(id);
+    await this.bookRepository.delete(id);
+    return book;
   }
 }

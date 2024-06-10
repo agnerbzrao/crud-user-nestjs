@@ -40,16 +40,3 @@ export class BookResolver {
     return this.bookService.remove(id);
   }
 }
-// # Write your query or mutation here
-// mutation Mutation($createBookInput: CreateBookInput!) {
-//   createBook(createBookInput: $createBookInput) {
-//     title
-//     description
-//   }
-// }
-// {
-//   "createBookInput":{
-//     "title": "Senhor dos aneis",
-//     "description": "Livro de RPG merdieval"
-//   }
-// }
