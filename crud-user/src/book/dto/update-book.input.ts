@@ -11,4 +11,7 @@ export class UpdateBookInput extends PartialType(CreateBookInput) {
 
   @Field({ nullable: true })
   description: string;
+
+  @Field()
+  student_id: number;
 }

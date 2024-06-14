@@ -6,7 +6,7 @@ import {
 import { CreateStudentInput } from './dto/create-student.input';
 import { UpdateStudentInput } from './dto/update-student.input';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Student as StudentEntity } from './entities/student.entity';
+import { Student, Student as StudentEntity } from './entities/student.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -40,6 +40,14 @@ export class StudentService {
 
   async findOne(id: number) {
     return await this.studentRepository.findOneBy({ id });
+  }
+
+  async findMany(id: number): Promise<Student[]> {
+    return await this.studentRepository.find({
+      where: {
+        id
+      }
+    })
   }
 
   async update(id: number, updateStudentInput: UpdateStudentInput) {

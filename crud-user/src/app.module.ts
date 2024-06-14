@@ -9,7 +9,6 @@ import { UsersModule } from './users/users.module';
 import typeOrmConfig from './config/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { join } from 'path';
 import { BookModule } from './book/book.module';
 import { StudentModule } from './student/student.module';
 
@@ -26,7 +25,7 @@ import { StudentModule } from './student/student.module';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), '/schema.gql'),
+      autoSchemaFile: true,
     }),
     CustomerModule,
     AuthModule,

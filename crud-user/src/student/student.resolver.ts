@@ -5,7 +5,6 @@ import { CreateStudentInput } from './dto/create-student.input';
 import { UpdateStudentInput } from './dto/update-student.input';
 import { Public } from '../auth/public-strategy';
 import { Book } from 'src/book/entities/book.entity';
-import { UpdateBookInput } from 'src/book/dto/update-book.input';
 import { BookService } from 'src/book/book.service';
 
 @Public()
@@ -37,8 +36,8 @@ export class StudentResolver {
   removeStudent(@Args('id', { type: () => ID }) id: number) {
     return this.studentService.remove(id);
   }
-  @ResolveField(() => Book)
-  async getBook(@Parent() updateBookInput: UpdateBookInput): Promise<Book> {
-    return await this.bookService.findOne(updateBookInput.id);
+  @ResolveField(() => [Book])
+  async getBook(@Parent() book: Book): Promise<Book[]> {
+    return await this.bookService.findMany(book.id);
   }
 }

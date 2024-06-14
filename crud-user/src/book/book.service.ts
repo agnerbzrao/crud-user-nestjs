@@ -1,6 +1,7 @@
 import {
-  Injectable,
   BadRequestException,
+  Injectable,
+  // BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateBookInput } from './dto/create-book.input';
@@ -16,14 +17,16 @@ export class BookService {
     private bookRepository: Repository<BookEntity>,
   ) { }
   async create(createBookInput: CreateBookInput) {
-    const { title, description } = createBookInput;
+    const { title } = createBookInput;
     const check = await this.bookRepository.findOne({
       where: {
         title,
       },
     });
+
     if (check) throw new BadRequestException('Title already exist!');
-    const bookCreated = this.bookRepository.create({ title, description });
+
+    const bookCreated = this.bookRepository.create({ ...createBookInput } as any)
 
     return await this.bookRepository.save(bookCreated);
   }
@@ -33,6 +36,7 @@ export class BookService {
     if (books.length !== 0) {
       return books;
     }
+
     throw new NotFoundException({
       message: `Anyone book was found`,
     });
@@ -50,8 +54,14 @@ export class BookService {
       });
     }
 
-    await this.bookRepository.update({ id }, updateBookInput);
+    await this.bookRepository.update({ id }, updateBookInput as any);
     return updateBookInput;
+  }
+
+  async findMany(id: number): Promise<BookEntity[]> {
+    return await this.bookRepository.createQueryBuilder("book")
+      .where("book.student_id = :id", { id })
+      .getMany();
   }
 
   async remove(id: number) {

@@ -7,4 +7,7 @@ export class CreateBookInput {
 
   @Field()
   description: string;
+
+  @Field()
+  student_id: number;
 }
