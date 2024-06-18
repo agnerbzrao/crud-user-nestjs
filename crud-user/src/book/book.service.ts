@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Injectable,
-  // BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateBookInput } from './dto/create-book.input';
@@ -17,62 +16,87 @@ export class BookService {
     private bookRepository: Repository<BookEntity>,
   ) { }
   async create(createBookInput: CreateBookInput) {
-    const { title } = createBookInput;
-    const check = await this.bookRepository.findOne({
-      where: {
-        title,
-      },
-    });
+    try {
+      const { title } = createBookInput;
+      const check = await this.bookRepository.findOne({
+        where: {
+          title,
+        },
+      });
 
-    if (check) throw new BadRequestException('Title already exist!');
+      if (check) throw new BadRequestException('Title already exist!');
 
-    const bookCreated = this.bookRepository.create({ ...createBookInput } as any)
+      const bookCreated = this.bookRepository.create({ ...createBookInput } as any)
 
-    return await this.bookRepository.save(bookCreated);
+      return await this.bookRepository.save(bookCreated);
+    } catch (error: any) {
+      return error.message;
+    }
   }
 
   async findAll() {
-    const books = await this.bookRepository.find();
-    if (books.length !== 0) {
-      return books;
-    }
+    try {
+      const books = await this.bookRepository.find();
+      if (books.length !== 0) {
+        return books;
+      }
 
-    throw new NotFoundException({
-      message: `Anyone book was found`,
-    });
+      throw new NotFoundException({
+        message: `Anyone book was found`,
+      });
+    } catch (error: any) {
+      return error.message;
+    }
   }
 
   async findOne(id: number) {
-    return await this.bookRepository.findOneBy({ id });
+    try {
+      return await this.bookRepository.findOneBy({ id });
+    } catch (error: any) {
+      return error.message;
+    }
   }
 
   async update(id: number, updateBookInput: UpdateBookInput) {
-    const book = await this.bookRepository.findOneBy({ id });
-    if (!book) {
-      throw new NotFoundException({
-        message: `Book with id ${id} not found`,
-      });
-    }
+    try {
+      const book = await this.bookRepository.findOneBy({ id });
+      if (!book) {
+        throw new NotFoundException({
+          message: `Book with id ${id} not found`,
+        });
+      }
 
-    await this.bookRepository.update({ id }, updateBookInput as any);
-    return updateBookInput;
+      await this.bookRepository.update({ id }, updateBookInput as any);
+      return updateBookInput;
+    } catch (error: any) {
+      return error.message;
+    }
   }
 
   async findMany(id: number): Promise<BookEntity[]> {
-    return await this.bookRepository.createQueryBuilder("book")
-      .where("book.student_id = :id", { id })
-      .getMany();
+    try {
+      return await this.bookRepository.createQueryBuilder("book")
+        .where("book.student_id = :id", { id })
+        .getMany();
+    } catch (error: any) {
+      return error.message;
+    }
   }
 
   async remove(id: number) {
-    const book = await this.bookRepository.findOneBy({ id });
+    try {
+      const book = await this.bookRepository.findOneBy({ id });
 
-    if (!book) {
-      throw new NotFoundException({
-        message: `Book with id ${id} not found`,
-      });
+      if (!book) {
+        throw new NotFoundException({
+          message: `Book with id ${id} not found`,
+        });
+      }
+      await this.bookRepository.delete(id);
+      return book;
+    } catch (error: any) {
+      return error.message;
     }
-    await this.bookRepository.delete(id);
-    return book;
+
   }
 }
